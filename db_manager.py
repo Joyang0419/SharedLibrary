@@ -48,6 +48,9 @@ class AsyncSqlalchemy(DBManager):
         self.db_url = f"{db_dialect}+{db_driver}://{db_user}:{db_password}" \
                       f"@{db_host}:{db_port}/{db_name}"
 
+        self.migrate_url = f"{db_dialect}://{db_user}:{db_password}" \
+                           f"@{db_host}:{db_port}/{db_name}"
+
         self._engine = create_async_engine(
             url=self.db_url,
             echo=echo,
