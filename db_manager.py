@@ -33,7 +33,6 @@ class AsyncSqlalchemy(DBManager):
                  db_user: str, db_password: str, db_host: str,
                  db_port: int, db_name: str, echo: bool):
         """
-"postgresql+asyncpg://scott:tiger@localhost/test", echo=True,
 
         Args:
             db_dialect: database name such as mysql, oracle, postgresql.
