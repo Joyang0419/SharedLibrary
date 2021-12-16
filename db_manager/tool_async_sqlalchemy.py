@@ -1,10 +1,11 @@
-import asyncio
 import contextlib
+from typing import Callable
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from src.SharedLibrary.db_manager.abstract import DBManager
+import asyncio
 
 
 class ToolAsyncSqlalchemy(DBManager):
@@ -16,7 +17,7 @@ class ToolAsyncSqlalchemy(DBManager):
 
         Args:
             db_dialect: database name such as mysql, oracle, postgresql.
-            db_driver: driver the name of a DBAPI,
+            db_driver: driver the name of a DB_API,
                 such as psycopg2, pyodbc, cx_oracle, aiomysql etc.
             db_user: user
             db_password: password
@@ -47,7 +48,7 @@ class ToolAsyncSqlalchemy(DBManager):
         self._session = async_session_factory()
 
     @contextlib.asynccontextmanager
-    async def get_db(self) -> AsyncSession:
+    async def get_db(self) -> Callable[..., AsyncSession]:
         """contextmanager will create and teardown a session"""
         try:
             yield self._session
@@ -71,13 +72,13 @@ class ToolAsyncSqlalchemy(DBManager):
 
 if __name__ == "__main__":
     async def example():
-        db_service = ToolAsyncSqlalchemy(
+        tool_async_sqlalchemy = ToolAsyncSqlalchemy(
             db_dialect='mysql', db_driver='aiomysql', db_user='test_user',
             db_password='test-pws', db_host='0.0.0.0', db_port=3306,
             db_name='user_profile', echo=True
         )
 
-        async with db_service.get_db() as db:
+        async with tool_async_sqlalchemy.get_db() as db:
             async with db.begin():
                 statement = 'select * from user_profile.label_metadata'
                 result = await db.execute(statement)
@@ -86,3 +87,4 @@ if __name__ == "__main__":
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(example())
+
